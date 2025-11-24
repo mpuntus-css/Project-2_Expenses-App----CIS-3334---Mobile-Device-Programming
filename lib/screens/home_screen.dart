@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../widget/expense_item.dart';
 import 'add_expense_screen.dart';
 import '../models/expense.dart';
+import 'login_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key, required this.title});
@@ -20,12 +22,27 @@ class _HomeScreenState extends State<HomeScreen> {
     Expense(amount: 32.80, category: 'Restaurant', date: DateTime.now().subtract(const Duration(days: 3)), note: ''),
   ];
 
+  Future<void> _signOut() async {
+    await FirebaseAuth.instance.signOut();
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const LoginScreen()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: _signOut,
+            tooltip: 'Sign Out',
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
