@@ -1,48 +1,58 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'register_screen.dart';
-import 'home_screen.dart';
+import 'login_screen.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
   final email = TextEditingController();
   final password = TextEditingController();
+  final confirmPassword = TextEditingController();
   bool loading = false;
 
   @override
   void dispose() {
     email.dispose();
     password.dispose();
+    confirmPassword.dispose();
     super.dispose();
   }
 
-  Future<void> _login() async {
+  Future<void> _register() async {
     if (!_formKey.currentState!.validate()) return;
+
+    if (password.text != confirmPassword.text) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Passwords do not match")),
+      );
+      return;
+    }
 
     setState(() => loading = true);
 
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email.text.trim(),
         password: password.text.trim(),
       );
 
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Account created! Please sign in.")),
+      );
+
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(
-          builder: (_) => const HomeScreen(title: "Expenses App"),
-        ),
+        MaterialPageRoute(builder: (_) => const LoginScreen()),
       );
     } on FirebaseAuthException catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.message ?? "Login failed")),
+        SnackBar(content: Text(e.message ?? "Registration failed")),
       );
     } finally {
       setState(() => loading = false);
@@ -53,23 +63,23 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
+      appBar: AppBar(
+        backgroundColor: Colors.grey.shade100,
+        elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.black),
+      ),
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 24),
           child: Column(
             children: [
-              const Icon(Icons.account_balance_wallet_rounded,
-                  size: 90, color: Colors.deepPurple),
+              const Icon(Icons.person_add_alt_1_rounded,
+                  size: 80, color: Colors.deepPurple),
               const SizedBox(height: 20),
 
               const Text(
-                "Welcome Back",
-                style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 6),
-              Text(
-                "Login to continue",
-                style: TextStyle(fontSize: 16, color: Colors.grey.shade700),
+                "Create Account",
+                style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
               ),
 
               const SizedBox(height: 30),
@@ -83,13 +93,13 @@ class _LoginScreenState extends State<LoginScreen> {
                       controller: email,
                       decoration: InputDecoration(
                         labelText: "Email",
-                        prefixIcon: const Icon(Icons.email_outlined),
+                        prefixIcon: const Icon(Icons.email),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
                       validator: (value) {
-                        if (value == null || value.trim().isEmpty) {
+                        if (value == null || value.isEmpty) {
                           return "Enter your email";
                         }
                         if (!value.contains("@")) {
@@ -105,7 +115,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       controller: password,
                       decoration: InputDecoration(
                         labelText: "Password",
-                        prefixIcon: const Icon(Icons.lock_outline),
+                        prefixIcon: const Icon(Icons.lock),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -113,21 +123,39 @@ class _LoginScreenState extends State<LoginScreen> {
                       obscureText: true,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return "Enter your password";
+                          return "Enter a password";
                         }
                         if (value.length < 6) {
-                          return "Password must be at least 6 characters";
+                          return "Min 6 characters";
                         }
                         return null;
                       },
                     ),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 16),
 
-                    // LOGIN BUTTON
+                    // CONFIRM PASSWORD
+                    TextFormField(
+                      controller: confirmPassword,
+                      decoration: InputDecoration(
+                        labelText: "Confirm Password",
+                        prefixIcon: const Icon(Icons.lock_reset),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      obscureText: true,
+                      validator: (value) =>
+                      value == null || value.isEmpty
+                          ? "Confirm your password"
+                          : null,
+                    ),
+
+                    const SizedBox(height: 30),
+
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                        onPressed: loading ? null : _login,
+                        onPressed: loading ? null : _register,
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.all(16),
                           backgroundColor: Colors.green,
@@ -137,38 +165,12 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         child: loading
                             ? const CircularProgressIndicator(color: Colors.white)
-                            : const Text("Sign In",
+                            : const Text("Register",
                             style: TextStyle(fontSize: 18)),
                       ),
                     ),
                   ],
                 ),
-              ),
-
-              const SizedBox(height: 20),
-
-              // REGISTER BUTTON
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text("Don't have an account? "),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => const RegisterScreen(),
-                        ),
-                      );
-                    },
-                    child: const Text(
-                      "Create one",
-                      style: TextStyle(
-                          color: Colors.deepPurple,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  )
-                ],
               ),
             ],
           ),
