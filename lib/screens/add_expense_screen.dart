@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../providers/expense_provider.dart';
 import '../models/expense.dart';
 
+/// Screen for adding a new expense.
 class AddExpenseScreen extends StatefulWidget {
   const AddExpenseScreen({super.key});
 
@@ -10,13 +11,20 @@ class AddExpenseScreen extends StatefulWidget {
   State<AddExpenseScreen> createState() => _AddExpenseScreenState();
 }
 
+/// State class for [AddExpenseScreen].
 class _AddExpenseScreenState extends State<AddExpenseScreen> {
+  /// Form key for validating the expense form.
   final _formKey = GlobalKey<FormState>();
+
+  /// Controller for the amount input field.
   final amountController = TextEditingController();
+
+  /// Controller for the note input field.
   final noteController = TextEditingController();
   DateTime? selectedDate;
   String? selectedCategory;
 
+  /// List of predefined categories.
   final List<String> categories = [
     'Food',
     'Housing',
@@ -33,6 +41,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
     'Others',
   ];
 
+  /// Map of category names to their respective icons.
   final Map<String, IconData> categoryIcons = {
     'Food': Icons.restaurant,
     'Housing': Icons.house,
@@ -56,6 +65,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
     super.dispose();
   }
 
+  /// Picks a date and time for the expense.
   Future<void> _pickDateTime() async {
     DateTime? date = await showDatePicker(
       context: context,
@@ -84,6 +94,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
     });
   }
 
+  /// Saves the expense to the provider.
   void _saveExpense() async {
     if (!_formKey.currentState!.validate()) return;
 
@@ -102,6 +113,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
 
   @override
   Widget build(BuildContext context) {
+    /// Builds the UI for adding an expense.
     return Scaffold(
       appBar: AppBar(title: const Text("Add Expense")),
       body: SafeArea(

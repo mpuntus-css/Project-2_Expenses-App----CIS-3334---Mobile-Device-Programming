@@ -3,19 +3,30 @@ import 'package:flutter/material.dart';
 import 'register_screen.dart';
 import 'home_screen.dart';
 
+/// Screen for user login.
 class LoginScreen extends StatefulWidget {
+  /// Constructs a [LoginScreen].
   const LoginScreen({super.key});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
+/// State class for [LoginScreen].
 class _LoginScreenState extends State<LoginScreen> {
+  /// Form key for validating the login form.
   final _formKey = GlobalKey<FormState>();
+
+  /// Controller for the email input field.
   final email = TextEditingController();
+
+  /// Controller for the password input field.
   final password = TextEditingController();
+
+  /// Indicates whether the login process is ongoing.
   bool loading = false;
 
+  /// Disposes controllers to free resources.
   @override
   void dispose() {
     email.dispose();
@@ -23,6 +34,7 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
+  /// Handles the login process.
   Future<void> _login() async {
     if (!_formKey.currentState!.validate()) return;
 
@@ -51,6 +63,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    /// Builds the UI for the login screen.
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
       body: Center(

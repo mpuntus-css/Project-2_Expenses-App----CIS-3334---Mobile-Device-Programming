@@ -7,10 +7,15 @@ import '../widget/expense_item.dart';
 import 'add_expense_screen.dart';
 import 'login_screen.dart';
 
+/// Displays the home screen with a list of expenses and total spent.
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key, required this.title});
+  /// Title of the home screen.
   final String title;
 
+  /// Constructs a [HomeScreen] with the given [title].
+  const HomeScreen({super.key, required this.title});
+
+  /// Signs out the user and navigates to the login screen.
   Future<void> _signOut(BuildContext context) async {
     await FirebaseAuth.instance.signOut();
     Navigator.pushReplacement(
@@ -38,6 +43,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    /// Builds the UI for the home screen, including the total spent and expense list.
     final provider = context.watch<ExpenseProvider>();
 
     return Scaffold(

@@ -6,8 +6,9 @@ import 'screens/login_screen.dart';
 import 'firebase_options.dart';
 import 'providers/expense_provider.dart';
 
-
-void main() async{
+/// Entry point of the application.
+/// Initializes Firebase and sets up providers.
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -22,12 +23,14 @@ void main() async{
   );
 }
 
+/// The root widget of the application.
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    /// Builds the MaterialApp with theme and initial route.
     return MaterialApp(
       title: 'Expenses App',
       theme: ThemeData(

@@ -1,10 +1,21 @@
+/// Represents an expense entry.
 class Expense {
+  /// Unique identifier for the expense.
   final String id;
+
+  /// The amount of the expense.
   final double amount;
+
+  /// The category of the expense.
   final String category;
+
+  /// The date of the expense.
   final DateTime date;
+
+  /// Additional notes about the expense.
   final String note;
 
+  /// Constructs an [Expense] with the given details.
   Expense({
     this.id = '',
     required this.amount,
@@ -13,6 +24,7 @@ class Expense {
     required this.note,
   });
 
+  /// Converts the [Expense] to a map for serialization.
   Map<String, dynamic> toMap() {
     return {
       'amount': amount,
@@ -22,6 +34,7 @@ class Expense {
     };
   }
 
+  /// Creates an [Expense] instance from Firestore data.
   factory Expense.fromFirestore(Map<String, dynamic> map, String docId) {
     return Expense(
       id: docId,

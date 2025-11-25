@@ -1,13 +1,18 @@
+/// Represents a category for expenses.
 class Category {
+  /// The name of the category.
   final String name;
+
+  /// The icon representing the category.
   final String icon;
 
+  /// Constructs a [Category] with the given [name] and [icon].
   Category({
     required this.name,
     required this.icon,
   });
 
-  // For future use: Convert Category to a map
+  /// Converts the [Category] to a map for serialization.
   Map<String, dynamic> toMap() {
     return {
       'name': name,
@@ -15,7 +20,7 @@ class Category {
     };
   }
 
-  // For future use: Create Category from a map
+  /// Creates a [Category] instance from a map.
   factory Category.fromMap(Map<String, dynamic> map) {
     return Category(
       name: map['name'],
