@@ -25,12 +25,12 @@ class HomeScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(title),   // <-- FIXED
+        title: Text(title),
         centerTitle: true,
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
-            onPressed: () => _signOut(context),  // <-- FIXED
+            onPressed: () => _signOut(context),
             tooltip: 'Sign Out',
           ),
         ],

@@ -10,6 +10,11 @@ class ExpenseProvider {
     await expensesRef.add(expense.toMap());
   }
 
+  Future<void> deleteExpense(String id) async {
+    await expensesRef.doc(id).delete();
+  }
+
+
   // Stream of expenses for live updates
   Stream<List<Expense>> getExpenses() {
     return expensesRef.orderBy('date', descending: true).snapshots().map(
