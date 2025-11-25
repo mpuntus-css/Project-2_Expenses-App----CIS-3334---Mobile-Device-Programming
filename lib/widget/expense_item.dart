@@ -28,8 +28,8 @@ class ExpenseItem extends StatelessWidget {
             final shouldDelete = await showDialog<bool>(
               context: context,
               builder: (context) => AlertDialog(
-                title: Text('Delete Expense: ${expense.category}'),
-                content: Text("Are you sure you want to delete this \$${expense.amount.toStringAsFixed(2)} expense?"),
+                title: const Text("Delete Expense"),
+                content: const Text("Are you sure you want to delete this expense?"),
                 actions: [
                   TextButton(
                     onPressed: () => Navigator.pop(context, false),
@@ -51,6 +51,34 @@ class ExpenseItem extends StatelessWidget {
             }
           },
         ),
+        onTap: () {
+          final formattedDate =
+              "${expense.date.year}-${expense.date.month.toString().padLeft(2,'0')}-${expense.date.day.toString().padLeft(2,'0')} "
+              "${expense.date.hour.toString().padLeft(2,'0')}:${expense.date.minute.toString().padLeft(2,'0')}";
+
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: const Text("Expense Details"),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Category: ${expense.category}"),
+                  Text("Amount: \$${expense.amount.toStringAsFixed(2)}"),
+                  Text("Note: ${expense.note.isNotEmpty ? expense.note : 'No note'}"),
+                  Text("Date: $formattedDate"), // shows without seconds
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text("Close"),
+                ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }

@@ -48,15 +48,63 @@ class HomeScreen extends StatelessWidget {
 
           final expenses = snapshot.data!;
 
-          return ListView.builder(
-            padding: const EdgeInsets.all(16),
-            itemCount: expenses.length,
-            itemBuilder: (context, index) {
-              return ExpenseItem(
-                icon: Icons.attach_money,
-                expense: expenses[index],
-              );
-            },
+          // Calculate total amount spent
+          final totalSpent = expenses.fold<double>(
+            0.0,
+                (previousValue, element) => previousValue + element.amount,
+          );
+
+          return Column(
+            children: [
+              // ===== Total Spent Box =====
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Card(
+                  elevation: 3,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Total Spent',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          '\$${totalSpent.toStringAsFixed(2)}',
+                          style: const TextStyle(
+                            fontSize: 32,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.redAccent,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+
+              // ===== List of Expenses =====
+              Expanded(
+                child: ListView.builder(
+                  padding: const EdgeInsets.all(16),
+                  itemCount: expenses.length,
+                  itemBuilder: (context, index) {
+                    return ExpenseItem(
+                      icon: Icons.attach_money,
+                      expense: expenses[index],
+                    );
+                  },
+                ),
+              ),
+            ],
           );
         },
       ),
