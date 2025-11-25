@@ -13,14 +13,45 @@ class AddExpenseScreen extends StatefulWidget {
 class _AddExpenseScreenState extends State<AddExpenseScreen> {
   final _formKey = GlobalKey<FormState>();
   final amountController = TextEditingController();
-  final categoryController = TextEditingController();
   final noteController = TextEditingController();
   DateTime? selectedDate;
+  String? selectedCategory;
+
+  final List<String> categories = [
+    'Food',
+    'Housing',
+    'Utilities',
+    'Transport',
+    'Health',
+    'Shopping',
+    'Personal Care',
+    'Entertainment',
+    'Subscriptions',
+    'Education',
+    'Gifts',
+    'Travel',
+    'Others',
+  ];
+
+  final Map<String, IconData> categoryIcons = {
+    'Food': Icons.restaurant,
+    'Housing': Icons.house,
+    'Utilities': Icons.lightbulb,
+    'Transport': Icons.directions_car,
+    'Health': Icons.health_and_safety,
+    'Shopping': Icons.shopping_bag,
+    'Personal Care': Icons.face_retouching_natural,
+    'Entertainment': Icons.movie,
+    'Subscriptions': Icons.subscriptions,
+    'Education': Icons.school,
+    'Gifts': Icons.card_giftcard,
+    'Travel': Icons.flight,
+    'Others': Icons.category,
+  };
 
   @override
   void dispose() {
     amountController.dispose();
-    categoryController.dispose();
     noteController.dispose();
     super.dispose();
   }
@@ -58,7 +89,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
 
     final expense = Expense(
       amount: double.parse(amountController.text),
-      category: categoryController.text.trim(),
+      category: selectedCategory!,
       note: noteController.text.trim(),
       date: selectedDate ?? DateTime.now(),
     );
@@ -94,12 +125,29 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                 ),
                 const SizedBox(height: 16),
 
-                // Category
-                TextFormField(
-                  controller: categoryController,
+                // Category Dropdown with icons
+                DropdownButtonFormField<String>(
+                  value: selectedCategory,
                   decoration: const InputDecoration(labelText: "Category"),
+                  items: categories.map((category) {
+                    return DropdownMenuItem(
+                      value: category,
+                      child: Row(
+                        children: [
+                          Icon(categoryIcons[category], color: Colors.grey[700]),
+                          const SizedBox(width: 8),
+                          Text(category),
+                        ],
+                      ),
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      selectedCategory = value;
+                    });
+                  },
                   validator: (value) =>
-                  value == null || value.isEmpty ? "Enter category" : null,
+                  value == null || value.isEmpty ? "Select category" : null,
                 ),
                 const SizedBox(height: 16),
 
@@ -129,6 +177,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                 ),
                 const SizedBox(height: 30),
 
+                // Save button
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.6,
                   child: ElevatedButton(

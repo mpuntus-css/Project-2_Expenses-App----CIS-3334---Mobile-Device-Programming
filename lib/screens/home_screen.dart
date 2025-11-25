@@ -19,6 +19,23 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
+  // Map categories to icons (same as in AddExpenseScreen)
+  static const Map<String, IconData> categoryIcons = {
+    'Food': Icons.restaurant,
+    'Housing': Icons.house,
+    'Utilities': Icons.lightbulb,
+    'Transport': Icons.directions_car,
+    'Health': Icons.health_and_safety,
+    'Shopping': Icons.shopping_bag,
+    'Personal Care': Icons.face_retouching_natural,
+    'Entertainment': Icons.movie,
+    'Subscriptions': Icons.subscriptions,
+    'Education': Icons.school,
+    'Gifts': Icons.card_giftcard,
+    'Travel': Icons.flight,
+    'Others': Icons.category,
+  };
+
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<ExpenseProvider>();
@@ -97,9 +114,12 @@ class HomeScreen extends StatelessWidget {
                   padding: const EdgeInsets.all(16),
                   itemCount: expenses.length,
                   itemBuilder: (context, index) {
+                    final expense = expenses[index];
+                    final icon = categoryIcons[expense.category] ?? Icons.attach_money;
+
                     return ExpenseItem(
-                      icon: Icons.attach_money,
-                      expense: expenses[index],
+                      icon: icon,
+                      expense: expense,
                     );
                   },
                 ),
