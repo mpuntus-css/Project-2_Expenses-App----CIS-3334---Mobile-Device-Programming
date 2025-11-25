@@ -150,8 +150,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           : null,
                     ),
 
-                    const SizedBox(height: 30),
-
+                    // REGISTER BUTTON
+                    const SizedBox(height: 24),
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
@@ -168,6 +168,31 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             : const Text("Register",
                             style: TextStyle(fontSize: 18)),
                       ),
+                    ),
+
+                    const SizedBox(height: 20),
+                    // LOGIN PAGE LINK
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text("Already have an account? "),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => const LoginScreen(),
+                              ),
+                            );
+                          },
+                          child: const Text(
+                            "Sign in",
+                            style: TextStyle(
+                                color: Colors.deepPurple,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        )
+                      ],
                     ),
                   ],
                 ),

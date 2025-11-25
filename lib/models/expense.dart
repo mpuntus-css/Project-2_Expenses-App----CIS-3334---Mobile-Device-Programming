@@ -1,17 +1,18 @@
 class Expense {
+  final String id;
   final double amount;
   final String category;
   final DateTime date;
   final String note;
 
   Expense({
+    this.id = '',
     required this.amount,
     required this.category,
     required this.date,
     required this.note,
   });
 
-  // For future use: Convert Expense to a map (useful for Firebase or local storage)
   Map<String, dynamic> toMap() {
     return {
       'amount': amount,
@@ -21,13 +22,13 @@ class Expense {
     };
   }
 
-  // For future use: Create Expense from a map
-  factory Expense.fromMap(Map<String, dynamic> map) {
+  factory Expense.fromFirestore(Map<String, dynamic> map, String docId) {
     return Expense(
-      amount: map['amount'],
-      category: map['category'],
+      id: docId,
+      amount: map['amount']?.toDouble() ?? 0,
+      category: map['category'] ?? '',
       date: DateTime.parse(map['date']),
-      note: map['note'],
+      note: map['note'] ?? '',
     );
   }
 }
